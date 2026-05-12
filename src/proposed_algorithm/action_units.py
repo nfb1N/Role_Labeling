@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from models import ActionUnit, PreprocessingResult, SentenceInfo, TokenInfo
+from .models import ActionUnit, PreprocessingResult, SentenceInfo, TokenInfo
 
 
 ACTION_DEPRELS = {

@@ -5,7 +5,7 @@ from typing import Any
 
 import stanza
 
-from models import PreprocessingResult, SentenceInfo, TokenInfo
+from .models import PreprocessingResult, SentenceInfo, TokenInfo
 
 
 def normalize_text(text: str) -> str:

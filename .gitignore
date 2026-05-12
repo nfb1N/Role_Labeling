@@ -43,10 +43,22 @@ Thumbs.db
 *.log
 logs/
 output/
-outputs/
+outputs/*
+!outputs/predictions/
+!outputs/reports/
+!outputs/traces/
+!outputs/predictions/.gitkeep
+!outputs/reports/.gitkeep
+!outputs/traces/.gitkeep
 
 # Local data and model artifacts
-data/
+data/*
+!data/raw/
+!data/gold/
+!data/examples/
+!data/raw/.gitkeep
+!data/gold/.gitkeep
+!data/examples/.gitkeep
 datasets/
 models/
 *.pkl
