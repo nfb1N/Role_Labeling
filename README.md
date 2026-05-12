@@ -6,32 +6,7 @@ Role Labeling is a Python project for a bachelor thesis algorithm:
 
 The current implementation contains the proposed algorithm pipeline. The repository is structured so future baseline systems and evaluation code can be added separately from the proposed algorithm.
 
-## Project Structure
-
-```text
-Role_Labeling/
-├── main.py
-├── src/
-│   ├── proposed_algorithm/
-│   │   ├── preprocessing.py
-│   │   ├── action_units.py
-│   │   ├── arguments.py
-│   │   ├── semantic_roles.py
-│   │   ├── thesis_roles.py
-│   │   ├── final_output.py
-│   │   ├── models.py
-│   │   └── pipeline.py
-│   ├── baselines/
-│   ├── evaluation/
-│   └── utils/
-├── data/
-├── outputs/
-├── experiments/
-│   └── run_proposed.py
-└── tests/
-```
-
-## Pipeline
+## Proposed Algorithm
 
 The proposed algorithm currently runs six steps:
 
@@ -39,8 +14,20 @@ The proposed algorithm currently runs six steps:
 2. `action_units.py` - extracts process-relevant action units from dependency predicates.
 3. `arguments.py` - extracts actors, candidate objects, oblique arguments, nested arguments, and inherited actors.
 4. `semantic_roles.py` - interprets extracted arguments as intermediate semantic roles using VerbNet plus conservative structural fallback.
-5. `thesis_roles.py` - maps intermediate semantic roles to thesis-specific domain-object roles.
+5. `thesis_roles.py` - maps intermediate semantic roles to thesis-specific roles, including `Performer / Agent` for actors/agents.
 6. `final_output.py` - builds traceable final JSON output with summary, records, and unresolved records.
+
+The role assignment layer uses this thesis role inventory:
+
+- `Performer / Agent`
+- `Target / Affected object`
+- `Result / Output object`
+- `Source / Input object`
+- `Transferred object`
+- `Support / Instrument object`
+- `Recipient-linked element`
+
+The implementation is intentionally traceable: final records include syntax, semantic role, thesis role, rule id, and a compact trace string.
 
 The public pipeline function is:
 
@@ -55,7 +42,7 @@ Use Python 3.10 or newer.
 Required Python packages:
 
 ```bash
-pip install stanza nltk
+pip install stanza nltk datasets
 ```
 
 Download the required model/data resources before the first run:
@@ -81,6 +68,34 @@ python3 experiments/run_proposed.py
 
 Both commands print the final Step 6 JSON output.
 
+## Data Generation
+
+Downloaded and generated datasets are ignored by Git. Recreate them locally when needed.
+
+Download PETv11 raw data:
+
+```bash
+python3 src/evaluation/pet_loader.py
+```
+
+This downloads PETv11 from Hugging Face and writes:
+
+- `data/raw/pet/petv11_relations.json`
+- `data/raw/pet/petv11_token_classification.json`
+- `data/raw/pet/petv11_inspection.json`
+
+Build candidate role cases:
+
+```bash
+python3 src/evaluation/pet_candidate_builder.py
+```
+
+This reads `data/raw/pet/petv11_relations.json` and creates:
+
+- `data/gold/candidate_role_cases_v1.csv`
+
+Draft or generated evaluation CSV files under `data/gold/` are also ignored. Only manually maintained documentation, such as annotation guidelines, should be committed by default.
+
 ## Output Shape
 
 The final output contains:
@@ -93,6 +108,7 @@ Example summary for the current sample text:
 
 ```json
 {
+  "Performer / Agent": 5,
   "Target / Affected object": 3,
   "Result / Output object": 1,
   "Source / Input object": 1,
@@ -101,9 +117,3 @@ Example summary for the current sample text:
   "Support / Instrument object": 1
 }
 ```
-
-## Notes
-
-- The proposed algorithm lives under `src/proposed_algorithm/`.
-- `src/baselines/` and `src/evaluation/` are placeholders for future work.
-- The implementation is intentionally traceable: final records include syntax, semantic role, thesis role, rule id, and a compact trace string.

@@ -59,6 +59,16 @@ data/*
 !data/raw/.gitkeep
 !data/gold/.gitkeep
 !data/examples/.gitkeep
+
+# Downloaded/generated datasets
+data/raw/**
+!data/raw/.gitkeep
+data/interim/
+data/processed/
+data/cache/
+data/gold/*.csv
+data/gold/*.json
+data/gold/*.jsonl
 datasets/
 models/
 *.pkl

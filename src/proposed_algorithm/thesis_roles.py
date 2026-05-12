@@ -132,7 +132,8 @@ def _group_by_action_unit(
 
 def _is_actor_or_agent(role: SemanticRoleInfo) -> bool:
     """
-    Actors are process participants, not domain objects in this role layer.
+    Actors/Agents are treated as performer-role records in the updated
+    thesis role inventory.
     """
     return role.argument_type == "actor" or role.semantic_role == "Agent"
 
@@ -197,12 +198,12 @@ def _assign_role_for_argument(
     if _is_actor_or_agent(role):
         return _make_thesis_role(
             role=role,
-            thesis_role=None,
-            status="ignored",
-            rule_id="T0_IGNORE_ACTOR",
+            thesis_role="Performer / Agent",
+            status="resolved",
+            rule_id="T0_PERFORMER_AGENT",
             justification=(
-                "Actor/Agent argument is treated as a process participant, "
-                "not as a domain-object role."
+                "Actor/Agent argument maps to Performer / Agent because "
+                "it performs or initiates the process action."
             ),
         )
 
